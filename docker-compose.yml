@@ -1,0 +1,35 @@
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    networks:
+      - mern-network
+  
+  server:
+    build: ./server
+    container_name: server
+    ports:
+      - "9000:9000"
+    networks:
+      - mern-network
+    depends_on:
+      - mongodb
+    env_file:
+      - ./server/.env
+
+  client:
+    build: ./client
+    container_name: client
+    ports:
+      - "3000:3000"
+    networks:
+      - mern-network
+    depends_on:
+      - server
+    env_file:
+      - ./client/.env
+
+networks:
+  mern-network:
+    driver: bridge
